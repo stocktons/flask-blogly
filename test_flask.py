@@ -29,14 +29,18 @@ class UserViewsTestCase(TestCase):
         db.session.add(user)
         db.session.commit()
 
-        self.user_id = user.id # I want to add a user id property to the UserViewsTestCase class. But maybe more useful to store the entire user instance object.
+        self.user = user # I want to add a user id property to the UserViewsTestCase class. But maybe more useful to store the entire user instance object.
 
     def tearDown(self):
         """Clean up any fouled transaction."""
 
         db.session.rollback()
 
+
+
     def test_root_redirect(self):
+        """ TODO: write docstring """
+
         with app.test_client() as client:
             resp = client.get("/")
 
@@ -44,6 +48,8 @@ class UserViewsTestCase(TestCase):
             self.assertEqual(resp.location, "http://localhost/users")
 
     def test_user_list(self):
+        """ TODO: write docstring """
+
         with app.test_client() as client:
             resp = client.get("/users")
             html = resp.get_data(as_text=True)
@@ -51,19 +57,27 @@ class UserViewsTestCase(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertIn('User listing template.', html) # looks for something on the page that won't ever move (in theory, since we labeled it as testing.)
 
+
+
     def test_show_user(self):
+        """ TODO: write docstring """
+
         with app.test_client() as client:
-            resp = client.get(f"/users/{self.user_id}") # self.user.id if use whole object
+            resp = client.get(f"/users/{self.user.id}") # self.user.id if use whole object
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn('<h1>TestUserFN TestUserLN</h1>', html) # self.user.first_name and don't specify h1 use an fstring to use self.user.fir...
+            self.assertIn(f'{self.user.first_name} {self.user.last_name}', html) # self.user.first_name and don't specify h1 use an fstring to use self.user.fir...
+
+
 
     def test_add_user(self):
+        """ TODO: write docstring """
+        
         with app.test_client() as client:
             d = {"first-name": "TestFN2", "last-name": "TestLN2", "img-url" : ""}
             resp = client.post("/users/new", data=d, follow_redirects=True)
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn("<h1>TestFN2 TestLN2</h1>", html) # fstring that looks for d[first-name]
+            self.assertIn(f'{d["first-name"]} {d["last-name"]}', html) # fstring that looks for d[first-name]
