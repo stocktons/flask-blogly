@@ -63,6 +63,7 @@ input {
 .cancel-btn {
     display: flex;
     background-color: rgb(216, 66, 66);
+    color: white;
     font-size: 1.1rem;
     border-radius: 5px;
     height: 45px;
@@ -81,6 +82,10 @@ input {
     color: white;
 } 
 
+#profile-pic {
+    max-height: 200px;
+    max-width: 200px;
+}
 
 
 
