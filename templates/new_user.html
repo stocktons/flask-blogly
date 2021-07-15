@@ -4,17 +4,17 @@
 {% block title %} Create User {% endblock %}
 
 
-{% block body %}
+{% block content %}
 
 <h1>Create a user</h1>
 
-<form action="/users/new" methods="POST">
+<form action="/users/new" method="POST">
     <label for="first-name">First Name</label>
-    <input type="text" name="first-name" placeholder="Enter a first name">
+    <input type="text" name="first-name" placeholder="Enter a first name"> <!--add id-->
     <label for="last-name">Last Name</label>
-    <input type="text" name="last-name" placeholder="Enter a last name">
+    <input type="text" name="last-name" placeholder="Enter a last name"> <!--add id-->
     <label for="img-url">Image URL</label>
-    <input type="text" name="img-url" placeholder="Provide an image of this user">
+    <input type="text" name="img-url" placeholder="Your picture"> <!--add id-->
 
     <button class="green-btn">Add</button>
 </form>

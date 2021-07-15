@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+# TODO: user default image url here
 
 def connect_db(app):
     """Connect to database."""
@@ -26,5 +27,5 @@ class User(db.Model):
     image_url = db.Column(db.Text, 
                     nullable=False, 
                     default='https://photolibrary.usap.gov/Tools/DrawImage.aspx?filename=emperor-penguin-noble.jpg')
-                    # can we restrict image size?
-                    
+        
+

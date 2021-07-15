@@ -4,14 +4,18 @@
 {% block title %} User Detail {% endblock %}
 
 
-{% block body %}
+{% block content %}
 
 <img src="{{ user.image_url }}" alt="profile picture here">
 
 <h1>{{ user.first_name }} {{ user.last_name }}</h1>
 
-<a class="edit-btn" href="/users/{{ user.id }}/edit">Edit</a>
+<!-- <a class="edit-btn" href="/users/{{ user.id }}/edit">Edit</a> -->
 
+<form>
+    <button formaction="/users/{{ user.id }}/edit" formmethod="GET">Edit</button>
+    <button formaction="/users/{{ user.id }}/delete" formmethod="POST">Delete</button>
+</form>
 
 
 {% endblock %}

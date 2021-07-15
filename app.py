@@ -24,14 +24,13 @@ def show_homepage():
     return redirect ("/users")
 
 
-
 @app.route("/users")
 def show_user_list(): 
     """ Shows list of all users. """
 
     users = User.query.all()
 
-    return render_template("user_listing.html", users = users)
+    return render_template("user_listing.html", users=users)
 
 
 @app.route("/users/new")
@@ -47,7 +46,7 @@ def add_user():
 
     first_name = request.form['first-name']
     last_name = request.form['last-name']
-    image_url = request.form['img-url']
+    image_url = request.form['img-url'] or None
 
     user = User(
                 first_name=first_name,
@@ -58,8 +57,7 @@ def add_user():
     db.session.add(user)
     db.session.commit()
 
-    return redirect(f"/users/{user.id}")
-
+    return redirect("/users")
 
 
 @app.route("/users/<int:user_id>")
@@ -68,4 +66,40 @@ def show_user(user_id):
 
     user = User.query.get_or_404(user_id)
     return render_template("user_detail.html", user=user)
+
+
+@app.route("/users/<int:user_id>/edit")
+def show_edit_page(user_id): 
+    """ Shows edit page. """
+
+    user = User.query.get_or_404(user_id)
+    return render_template("user_edit_page.html", user=user)
+
+
+@app.route("/users/<int:user_id>/edit", methods=["POST"])
+def edit_user(user_id): 
+    """ Allows user to edit profile. """
+
+    user = User.query.get_or_404(user_id)
+
+    user.first_name = request.form['first-name']
+    user.last_name = request.form['last-name']
+    user.image_url = request.form['img-url'] or None
+
+    db.session.commit()
+
+    return redirect("/users")
+
+
+@app.route("/users/<int:user_id>/delete", methods=["POST"])
+def delete_user(user_id): 
+    """ Allows user to delete profile. """
+    
+    user = User.query.get_or_404(user_id)
+    
+    db.session.delete(user)
+    db.session.commit()
+
+    return redirect("/users")
+
 
