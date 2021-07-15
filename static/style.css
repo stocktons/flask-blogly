@@ -16,6 +16,10 @@ form {
     margin-left: 20px;
 }
 
+form p {
+    margin-bottom: 5px;
+}
+
 .new-user-btn {
     display: flex;
     background-color: grey;
@@ -38,6 +42,7 @@ form {
 } 
 
 .green-btn {
+    display: block;
     background-color:rgb(43, 189, 104);
     color: white;
     border: none;
@@ -47,13 +52,34 @@ form {
     font-size: 1.1rem;
     border-radius: 5px;
     box-shadow: 0px 1px 2px rgb(33, 33, 33);
-    margin-top: 5px;
+    margin-top: 15px;
 }
 
 input {
     height: 20px;
     margin-top: 0px;
 }
+
+.cancel-btn {
+    display: flex;
+    background-color: rgb(216, 66, 66);
+    font-size: 1.1rem;
+    border-radius: 5px;
+    height: 45px;
+    width: 100px;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 1px 2px rgb(33, 33, 33);
+    margin-top: 5px;
+}
+
+.cancel-btn a:link {
+    color: white;
+}
+
+.cancel-btn a:visited {
+    color: white;
+} 
 
 
 
