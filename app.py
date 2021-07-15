@@ -110,7 +110,7 @@ def delete_user(user_id):
 
 @app.route("/users/<int:user_id>/posts/new")
 def show_add_post_form(user_id): 
-    """ Shows form to add new post. """
+    """Shows form to add new post."""
 
     user = User.query.get_or_404(user_id)
 
@@ -119,7 +119,7 @@ def show_add_post_form(user_id):
 
 @app.route("/users/<int:user_id>/posts/new", methods=["POST"])
 def add_new_post(user_id): 
-    """ Allows user to add new post. """
+    """Allows user to add new post."""
     
     post_title = request.form['post-title']
     post_content = request.form['post-content']
@@ -147,7 +147,7 @@ def show_post(post_id):
 
 @app.route("/posts/<post_id>/edit")
 def show_edit_form(post_id):
-    """ Shows edit form for post. """
+    """Shows edit form for post."""
 
     post = Post.query.get_or_404(post_id)
     user = post.user
@@ -157,7 +157,7 @@ def show_edit_form(post_id):
 
 @app.route("/posts/<post_id>/edit", methods=["POST"])
 def edit_post(post_id):
-    """ Edits post and updates database. Returns to User Detail page. """
+    """Edits post and updates database. Returns to User Detail page."""
 
     post = Post.query.get_or_404(post_id)
 
@@ -171,7 +171,7 @@ def edit_post(post_id):
 
 @app.route("/posts/<post_id>/delete", methods=["POST"])
 def delete_post(post_id):
-    """ Deletes post from database. """
+    """Deletes post from database."""
 
     post = Post.query.get_or_404(post_id)
     user = post.user

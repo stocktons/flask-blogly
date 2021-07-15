@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from app import app
-from models import db, User
+from models import db, User, Post
 
 # Use test database and don't clutter tests with SQL
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly_test' #does this need to be blogly_test?
@@ -39,7 +39,7 @@ class UserViewsTestCase(TestCase):
 
 
     def test_root_redirect(self):
-        """ TODO: write docstring """
+        """Checks to see that root redirects correctly."""
 
         with app.test_client() as client:
             resp = client.get("/")
@@ -48,7 +48,7 @@ class UserViewsTestCase(TestCase):
             self.assertEqual(resp.location, "http://localhost/users")
 
     def test_user_list(self):
-        """ TODO: write docstring """
+        """Checks to see that the current user list displays."""
 
         with app.test_client() as client:
             resp = client.get("/users")
@@ -60,10 +60,10 @@ class UserViewsTestCase(TestCase):
 
 
     def test_show_user(self):
-        """ TODO: write docstring """
+        """Checks to see that the user profile is displayed."""
 
         with app.test_client() as client:
-            resp = client.get(f"/users/{self.user.id}") # self.user.id if use whole object
+            resp = client.get(f"/users/{self.user.id}")
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
@@ -72,7 +72,7 @@ class UserViewsTestCase(TestCase):
 
 
     def test_add_user(self):
-        """ TODO: write docstring """
+        """Checks to see if a user can be added and displayed on user list successfully."""
         
         with app.test_client() as client:
             d = {"first-name": "TestFN2", "last-name": "TestLN2", "img-url" : ""}
@@ -80,4 +80,63 @@ class UserViewsTestCase(TestCase):
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn(f'{d["first-name"]} {d["last-name"]}', html) # fstring that looks for d[first-name]
+            self.assertIn(f'{d["first-name"]} {d["last-name"]}', html)
+
+
+class PostViewsTestCase(TestCase):
+    """Tests view functions for Posts."""
+
+    def setUp(self): # this runs before every test
+        """Add sample user & sample post."""
+
+        Post.query.delete()
+        User.query.delete()
+        
+        user = User(first_name="TestUserFN", last_name="TestUserLN", image_url="")
+        post = Post(title="TestPostTitle", content="TestPostContent", user_id=user.id) 
+
+        db.session.add_all([user, post])
+        db.session.commit()
+
+        self.user = user
+        self.post = post
+
+    def tearDown(self):
+        """Clean up any fouled transaction."""
+
+        db.session.rollback()
+
+
+    def test_show_post(self):
+        """Checks to see that the post page displays posts."""
+
+        with app.test_client() as client:
+            resp = client.get(f"/posts/{self.post.id}") 
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn(self.post.title, html) 
+
+    def test_add_post(self):
+        """Checks to see that a new post is added."""
+        
+        with app.test_client() as client:
+            d = {"post-title": "TestTitle2", "post-content": "TestContent2"}
+            resp = client.post(f"/users/{self.user.id}/posts/new", data=d, follow_redirects=True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn(f'{d["post-title"]}', html) 
+
+    def test_delete_post(self):
+        """Checks to see that a post is deleted."""
+        
+        with app.test_client() as client:
+            resp = client.post(f"/posts/{self.post.id}/delete", follow_redirects=True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertNotIn(self.post.title, html) 
+
+
+   
