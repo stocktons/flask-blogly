@@ -23,7 +23,7 @@ def show_homepage():
 
     return redirect ("/users")
 
-####################################
+######################################################################
 # User Routes
 
 @app.route("/users")
@@ -67,7 +67,8 @@ def show_user(user_id):
     """ Show info on a single user. """
 
     user = User.query.get_or_404(user_id)
-    return render_template("user_detail.html", user=user)
+    posts = user.posts
+    return render_template("user_detail.html", user=user, posts=posts)
 
 
 @app.route("/users/<int:user_id>/edit")
@@ -104,7 +105,7 @@ def delete_user(user_id):
 
     return redirect("/users")
 
-##################################
+####################################################################
 # Post Routes
 
 @app.route("/users/<int:user_id>/posts/new")
@@ -134,3 +135,48 @@ def add_new_post(user_id):
 
     return redirect(f"/users/{user_id}")
 
+
+@app.route("/posts/<int:post_id>")
+def show_post(post_id): 
+    """ Shows post. """
+
+    post = Post.query.get_or_404(post_id)
+
+    return render_template("post_detail.html", post=post)
+
+
+@app.route("/posts/<post_id>/edit")
+def show_edit_form(post_id):
+    """ Shows edit form for post. """
+
+    post = Post.query.get_or_404(post_id)
+    user = post.user
+
+    return render_template("edit_post.html", post=post, user=user)
+
+
+@app.route("/posts/<post_id>/edit", methods=["POST"])
+def edit_post(post_id):
+    """ Edits post and updates database. Returns to User Detail page. """
+
+    post = Post.query.get_or_404(post_id)
+
+    post.title = request.form['post-title']
+    post.content = request.form['post-content']
+
+    db.session.commit()
+
+    return redirect(f"/posts/{post_id}")
+
+
+@app.route("/posts/<post_id>/delete", methods=["POST"])
+def delete_post(post_id):
+    """ Deletes post from database. """
+
+    post = Post.query.get_or_404(post_id)
+    user = post.user
+    
+    db.session.delete(post)
+    db.session.commit()
+
+    return redirect(f"/users/{user.id}")
